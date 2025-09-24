@@ -1,0 +1,9 @@
+1307042,    Victor,    calle,    3,    a+,    \
+123213,    Victor,    calle,    3,    a+,    ÿ
+4324,    CArlos,    calle,    3,    o+,    !
+2312,    Lad,    Cal,    3,    o-,    !
+12312,    asdasda,    dasa,    0,    a+,    ø
+123123,    dasdasd,    asdasda,    2,    2,    ó
+121323,    wewqeqwfd,    dadaewe,    2,    a+,    »
+12312313,    andres Gueerero,    calle 50 no 20,    1,    a+,    ¡
+13070842,    victor,    calle 50 no 9,    2,    a+,    —

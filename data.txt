@@ -1,0 +1,18 @@
+1307042,    Victor,    calle,    3,    a+,    30021212
+123213,    Victor,    calle,    3,    a+,    31231
+4324,    CArlos,    calle,    3,    o+,    12321
+2312,    Lad,    Cal,    3,    o-,    12321
+12312,    asdasda,    dasa,    0,    a+,    12312312
+123123,    dasdasd,    asdasda,    2,    2,    123123
+121323,    wewqeqwfd,    dadaewe,    2,    a+,    3123131
+12312313,    andres Gueerero,    calle 50 no 20,    1,    a+,    23331233
+13070842,    victor,    calle 50 no 9,    2,    a+,    32323223
+6,    6,    6,    6,    6,    3000000000
+2,    2,    2,    2,    2,    3000000000
+4,    4,    4,    4,    4,    4000000000
+80,    80,    10,    1,    8,    5000000000
+2,    unodostrescuatro,    cra4050,    2,    aaaaaaaaa,    3136677971
+2,    joe,    34,    2,    ,    60080080
+80,    carlos el pro,    cra30,    3,    ,    911
+
+70,    20,    29,    2,    ,    numero loco,    90
