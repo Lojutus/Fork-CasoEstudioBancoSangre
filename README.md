@@ -31,7 +31,7 @@ make google-test       # Ejecuta los test con la librería gtest de google
 El binario generado es `test_runner`.
 
 # NOTAS
-Es Posible que se peirda acceso a modificar diversos archivos dentro del contanier, si es asi se debe de ejecutar
+Es Posible que se pierda acceso a modificar diversos archivos dentro del contanier, si es asi se debe de ejecutar
 estando en la carpeta raíz del proyecto
 ```bash
 sudo chown -R $(whoami):$(whoami) .

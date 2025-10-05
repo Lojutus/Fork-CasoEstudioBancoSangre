@@ -9,6 +9,7 @@ using namespace std;
 int main() {
   std::string donorName;
   BloodDatabase database;
+  BloodDatabase::DonorsData stats = database.readDataFromFileAndSaveStats();
   int choice;
 
   std::string valor;
@@ -62,7 +63,8 @@ int main() {
 
     case 5:
       std::cout << "Reporte de donaciones" << std::endl;
-      database.readDataFromFileAndSave();
+      
+      database.report(stats);
       break;
 
     default:

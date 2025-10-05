@@ -4,6 +4,7 @@
 #include <cctype>
 #include <cerrno>
 #include <climits>
+
 #include <cstdlib>
 #include <fstream>
 #include <iostream>
@@ -16,6 +17,8 @@
 #include <iomanip>
 
 using namespace std;
+
+std::vector<Donor> BloodDatabase::donors;
 
 std::string BloodDatabase::getInformation(const std::string infoRequired) {
   std::string info = "";
@@ -119,7 +122,7 @@ BloodDatabase::getValidatedStringInput(const std::string &value,
 } // VALIDA LA ENTRADA DEL USUARIO  , TAMBIEN SI RECIBE UN ERROR DE VERIFICACION
   // PIDE EL VALOR DE NUEVO, se verifica los inputs strings
 
-void BloodDatabase::getDonorDetails() {
+void BloodDatabase::getDonorDetails() {//Funcion dice que va a devolver los datos del donante pero en realidad los guarda
   clearConsole();
   std::cout << "Ingrese los detalles del donante\n" << std::endl;
 
@@ -157,7 +160,32 @@ void BloodDatabase::writeDataToFile() {
 
   outfile.close();
 } // ESCRIBE LOS DATOS DEL DONANTE EN EL ARCHIVO, RESPETA SRP , , Y OPen/Closed
+void  BloodDatabase::loadDonorsFromFile() const {
+  std::ifstream inFile(fileName);
 
+  if (!inFile) {
+    std::cout << "Error al abrir el archivo para leer." << std::endl;
+    return;
+  }
+
+  std::string line;
+  donors.clear(); // Limpiar el vector antes de cargar nuevos datos
+
+  while (std::getline(inFile, line)) {
+    try {
+      Donor d = Donor::parseLine(line);
+      donors.push_back(d);
+    } catch (const std::exception &e) {
+      std::cerr << "Error procesando línea: " << line << std::endl;
+      std::cerr << "Mensaje de error: " << e.what() << std::endl;
+      continue; // Omitir líneas con errores y continuar
+    }
+  }
+  std::cout << "Datos cargados correctamente desde el archivo." << std::endl;
+
+  inFile.close();
+} // ABRE EL ARCHIVO PARA LEER , LEE LINEA POR LINEA Y LA PARSEA , SI HAY UN ERROR
+  // LO MANEJA
 void BloodDatabase::searchAndDisplay() const {
   clearConsole();
   displayProvinces();
@@ -181,7 +209,7 @@ void BloodDatabase::searchAndDisplay() const {
     return;
   }
 
-  std::vector<Donor> donors;
+  std::vector<Donor> donors; // Vector para almacenar los donantes que coinciden ya estaba definido como atributo, error logico 
   std::string line;
   bool found = false;
 
@@ -344,22 +372,25 @@ std::string BloodDatabase::normalizeBloodType(const std::string& bloodType) cons
   return "DESCONOCIDO";
 }
 
-void BloodDatabase::readDataFromFileAndSave() {
+BloodDatabase::DonorsData BloodDatabase::readDataFromFileAndSaveStats() { // FUNCION QUE LEE EL ARCHIVO Y GENERA EL REPORTE
+  DonorsData stats; // Estructura para almacenar los datos de donantes
+  // Mapas para contar donantes por zona y tipo de sangre
+  std::map<int, std::map<std::string, int>> donorsByZoneAndType;// mapa anidado para contar donantes por zona y tipo de sangre
+  std::map<int, int> totalDonorsByZone; //Total de donantes por MUNICIPIO con key el codigo del municipio
+  // LOS MAPS SON DICCIONRIOS QUE PERMITEN ALMACENAR DATOS DE FORMA ORDENADA Y ACCEDER A ELLOS RÁPIDAMENTE POR UNA CLAVE
+
   std::ifstream inFile(fileName);
 
   if (!inFile) {
     std::cout << "Error al abrir el archivo para leer." << std::endl;
     waitForKeyPress();
-    return;
+    return stats;
   }
-
-  // Mapas para contar donantes por zona y tipo de sangre
-  std::map<int, std::map<std::string, int>> donorsByZoneAndType;
-  std::map<int, int> totalDonorsByZone; // LOS MAPS SON DICCIONRIOS QUE PERMITEN ALMACENAR DATOS DE FORMA ORDENADA Y ACCEDER A ELLOS RÁPIDAMENTE POR UNA CLAVE
-
-  std::string line;
-  int totalValidDonors = 0;
-  int invalidLines = 0;
+  
+  
+  std::string line; // Linea de donante
+  int totalValidDonors = 0; // Contador de donantes con datos válidos
+  int invalidLines = 0; // Contador de líneas con datos inválidos
 
   while (std::getline(inFile, line)) {
     if (line.empty()) continue;
@@ -383,18 +414,11 @@ void BloodDatabase::readDataFromFileAndSave() {
       continue;
     }
   }
-
-  inFile.close();
-
-  // Mostrar el reporte
-  clearConsole();
-  std::cout << "=== REPORTE DE DONANTES POR TIPO DE SANGRE Y ZONA ===" << std::endl;
-  std::cout << "======================================================" << std::endl << std::endl;
-
+  
   if (totalValidDonors == 0) {
     std::cout << "No se encontraron donantes con datos válidos." << std::endl;
     waitForKeyPress();
-    return;
+    return stats;
   }
 
   // Mostrar estadísticas generales
@@ -404,23 +428,39 @@ void BloodDatabase::readDataFromFileAndSave() {
   }
   std::cout << std::endl;
 
+  inFile.close();
+  stats.donorsByZoneAndType = donorsByZoneAndType;
+  stats.totalDonorsByZone = totalDonorsByZone;
+  return stats;
+}
+void BloodDatabase::report(BloodDatabase::DonorsData stats) {
+  std::map<int, std::map<std::string, int>> donorsByZoneAndType = stats.donorsByZoneAndType;
+  std::map<int, int> totalDonorsByZone = stats.totalDonorsByZone;
+
+  // FUNCION QUE LEE EL ARCHIVO Y GENERA EL REPORTE
+  // REPORTE DESDE AQUI
+  clearConsole();
+  std::cout << "=== REPORTE DE DONANTES POR TIPO DE SANGRE Y ZONA ===" << std::endl;
+  std::cout << "======================================================" << std::endl << std::endl;
+
+
   // Tipos de sangre a reportar
   std::vector<std::string> bloodTypes = {"A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"};
 
   // Reporte por zona
-  for (int zone = 1; zone <= 10; zone++) {
+  for (int zone = 1; zone <= 10; zone++) {//zona 1 a 10 definido en codigo duro
     if (totalDonorsByZone.find(zone) != totalDonorsByZone.end()) {
       std::cout << "--- " << getZoneName(zone) << " ---" << std::endl;
       std::cout << "Total de donantes en esta zona: " << totalDonorsByZone[zone] << std::endl;
 
       for (const std::string& bloodType : bloodTypes) {
-        int count = 0;
+        int count = 0;//Contador de donantes por tipo de sangre en la zona actual
         if (donorsByZoneAndType[zone].find(bloodType) != donorsByZoneAndType[zone].end()) {
           count = donorsByZoneAndType[zone][bloodType];
         }
 
         double percentage = (totalDonorsByZone[zone] > 0) ? 
-                           (static_cast<double>(count) / totalDonorsByZone[zone]) * 100.0 : 0.0;
+                           (static_cast<double>(count) / totalDonorsByZone[zone]) * 100.0 : 0.0;// Porcentaje de donantes de este tipo en la zona
 
         std::cout << "  " << bloodType << ": " << count << " donantes (" 
                   << std::fixed << std::setprecision(1) << percentage << "%)" << std::endl;
@@ -431,12 +471,16 @@ void BloodDatabase::readDataFromFileAndSave() {
 
   // Resumen nacional por tipo de sangre
   std::cout << "=== RESUMEN NACIONAL POR TIPO DE SANGRE ===" << std::endl;
-  std::map<std::string, int> nationalCounts;
+  std::map<std::string, int> nationalCounts;// Mapa para contar donantes por tipo de sangre a nivel nacional
 
-  for (const auto& zone : donorsByZoneAndType) {
+  for (const auto& zone : donorsByZoneAndType) { // El auto configura el tipo de dato automáticamente
     for (const auto& bloodType : zone.second) {
       nationalCounts[bloodType.first] += bloodType.second;
     }
+  }
+  int totalValidDonors = 0;
+  for (const auto& par : totalDonorsByZone) {
+      totalValidDonors += par.second;
   }
 
   for (const std::string& bloodType : bloodTypes) {
@@ -450,4 +494,8 @@ void BloodDatabase::readDataFromFileAndSave() {
 
   std::cout << std::endl;
   waitForKeyPress();
+ 
+}
+std::vector<Donor> BloodDatabase::getAllDonors() {
+    return donors;
 }
