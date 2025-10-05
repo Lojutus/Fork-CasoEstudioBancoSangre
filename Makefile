@@ -23,9 +23,12 @@ clean:
 	rm -f $(TARGET) $(TEST_BIN) *.o
 
 # GoogleTest build
-TEST_SRC = tests/test_main.cpp
 TEST_BIN = test_runner
+TEST_SRC = tests/test_main.cpp
+TEST_DEPS = BloodDatabase.cpp Donor.cpp
+
 google-test: $(TEST_BIN)
 	./$(TEST_BIN)
-$(TEST_BIN): $(TEST_SRC)
-	$(CXX) $(CXXFLAGS) -o $@ $^ -lgtest -lgtest_main $(LDFLAGS)
+
+$(TEST_BIN): $(TEST_SRC) $(TEST_DEPS)
+	$(CXX) $(CXXFLAGS) -o $@ $(TEST_SRC) $(TEST_DEPS) -lgtest -lgtest_main $(LDFLAGS)
