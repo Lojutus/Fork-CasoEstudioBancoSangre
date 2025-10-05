@@ -7,15 +7,24 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <map>
+#include <iomanip>
 
 class BloodDatabase {
 private:
   const std::string fileName = "data.txt";
-  std::vector<Donor> donors;
+  static std::vector<Donor> donors;
 
   static void displayProvinces();
 
+  
+
 public:
+  struct DonorsData { // Estructura para almacenar datos de donantes por zona y tipo de sangre Para poder usarlos luego y añadir informacion estadistica facilemente
+    std::map<int, std::map<std::string, int>> donorsByZoneAndType;
+    std::map<int, int> totalDonorsByZone;
+  };
+  static std::vector<Donor> getAllDonors();
   static void clearConsole();
 
   static void waitForKeyPress();
@@ -29,14 +38,17 @@ public:
   std::string getZoneName(int zoneCode) const;
   
   std::string normalizeBloodType(const std::string& bloodType) const;
-  
-  void readDataFromFileAndSave();
 
+  DonorsData readDataFromFileAndSaveStats();
+
+  void report(DonorsData stats);
   void getDonorDetails();
 
   void writeDataToFile();
 
   void searchAndDisplay() const;
+
+  void loadDonorsFromFile() const;
 
   void deleteDonor(const std::string &donorName);
 
