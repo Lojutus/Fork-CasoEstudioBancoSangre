@@ -421,11 +421,7 @@ BloodDatabase::DonorsData BloodDatabase::readDataFromFileAndSaveStats() { // FUN
     return stats;
   }
 
-  // Mostrar estadísticas generales
-  std::cout << "Total de donantes válidos: " << totalValidDonors << std::endl;
-  if (invalidLines > 0) {
-    std::cout << "Líneas con datos inválidos ignoradas: " << invalidLines << std::endl;
-  }
+
   std::cout << std::endl;
 
   inFile.close();
@@ -491,10 +487,24 @@ void BloodDatabase::report(BloodDatabase::DonorsData stats) {
     std::cout << bloodType << ": " << count << " donantes (" 
               << std::fixed << std::setprecision(1) << percentage << "% del total nacional)" << std::endl;
   }
+  
+  std::cout << std::endl;
+ 
+  //Reporte del tipo de sangre mas comun en la poblacion
+  std::cout << "=== TIPO DE SANGRE MÁS COMÚN EN LA POBLACIÓN ===" << std::endl;
+  std::string mostCommonBloodType;
+  int highestCount = 0;
+  for (const std::string& bloodType : bloodTypes) {
+    int count = nationalCounts[bloodType];
+    if (count > highestCount) {
+      highestCount = count;
+      mostCommonBloodType = bloodType;
+    }
+  }
 
+  std::cout << "Tipo de sangre más común: " << mostCommonBloodType << " (" << highestCount << " donantes)" << std::endl;
   std::cout << std::endl;
   waitForKeyPress();
- 
 }
 std::vector<Donor> BloodDatabase::getAllDonors() {
     return donors;
