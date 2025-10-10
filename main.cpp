@@ -1,6 +1,7 @@
 
 #include "BloodDatabase.h"
 #include "Donor.h"
+#include "Console.h"
 #include <iostream>
 #include <limits>
 #include <string>
@@ -15,7 +16,7 @@ int main() {
   std::string valor;
 
   while (true) {
-    BloodDatabase::clearConsole();
+    Console::clearConsole();
 
     std::cout << " ░█████╗░██████╗░██╗░░░██╗███████╗  ██████╗░░█████╗░░░░░░██╗░"
                  "█████╗░\n"
@@ -54,7 +55,7 @@ int main() {
       std::cout << "Ingrese el nombre del donante a eliminar: ";
       std::getline(std::cin, donorName);
       database.deleteDonor(donorName);
-      BloodDatabase::waitForKeyPress();
+      Console::waitForKeyPress();
       break;
 
     case 4:
@@ -69,7 +70,7 @@ int main() {
 
     default:
       std::cout << "Opción no válida. Inténtalo de nuevo.\n";
-      BloodDatabase::waitForKeyPress();
+      Console::waitForKeyPress();
       break;
     }
   }
