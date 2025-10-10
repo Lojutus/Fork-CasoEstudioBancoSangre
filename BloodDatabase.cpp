@@ -1,5 +1,6 @@
 
 #include "BloodDatabase.h"
+#include "Console.h"
 #include <algorithm>
 #include <cctype>
 #include <cerrno>
@@ -19,28 +20,9 @@
 using namespace std;
 
 std::vector<Donor> BloodDatabase::donors;
+Console console;
 
-std::string BloodDatabase::getInformation(const std::string infoRequired) {
-  std::string info = "";
-  std::cout << "Ingrese " << infoRequired << " :" << std::endl;
-  clearConsole();
-  std::getline(std::cin, info);
-  // cin >> info;
 
-  Donor d; // donante temporal para comprovar si los datos existen en la clase
-  if (d.getItemsDonorInfo(infoRequired) == "string") {
-
-    info = getValidatedStringInput(
-        info, infoRequired); // VALIDA LA ENTRADA DEL USUARIO
-  } else if (d.getItemsDonorInfo(infoRequired) == "int") {
-    info = std::to_string(getValidatedInput(
-        info, infoRequired)); // VALIDA LA ENTRADA DEL USUARIO com entero
-
-  } else {
-    std::cout << "El tipo de dato no es válido." << std::endl;
-  }
-  return info;
-}
 
 void BloodDatabase::displayProvinces() {
   std::cout << "Elige el departamento:\n";
@@ -56,89 +38,32 @@ void BloodDatabase::displayProvinces() {
   std::cout << "10. Guainía\n" << std::endl;
 } // MUESTRA LOS DEPARTAMENTOS
 
-void BloodDatabase::clearConsole() {
-#ifdef _WIN32
-  system("cls");
-#else
-  //   system("clear");
-#endif
-} // LIMPIA LA CONSOLA
 
-void BloodDatabase::waitForKeyPress() {
-  std::cout << "Presiona cualquier tecla para continuar..." << std::endl;
-  std::cin.ignore();
-  std::cin.get();
-} // ESPERA A QUE EL USUARIO PRESIONE UNA TECLA
 
-int BloodDatabase::getValidatedInput(const std::string &value,
-                                     const std::string &infoType) {
-  int newValue = 0;
-  std::string info = value;
 
-  while (true) {
-    try {
-      // Validar que todos los caracteres sean dígitos
-      if (!std::all_of(info.begin(), info.end(),
-                       [](unsigned char c) { return std::isdigit(c); })) {
-        throw std::invalid_argument(
-            "La entrada contiene caracteres no numéricos");
-      }
 
-      // Convertir a entero
-      newValue = std::stoi(info);
 
-      break; // salida del while si todo salió bien
-
-    } catch (const std::invalid_argument &e) {
-      std::cout << "Entrada no válida: " << e.what()
-                << ". Por favor ingrese un número válido." << std::endl;
-
-      info = getInformation(infoType); // obtienes nuevo valor
-    } catch (const std::out_of_range &e) {
-      std::cout << "Entrada fuera de rango: " << e.what()
-                << ". Por favor ingrese un número válido." << std::endl;
-      info = getInformation(infoType);
-    }
-  }
-
-  return newValue;
-}
 // VALIDA LA ENTRADA DEL USUARIO
 
-std::string
-BloodDatabase::getValidatedStringInput(const std::string &value,
-                                       const std::string &infoType) {
 
-  if (value.length() > 20) {
-    std::cout << "La entrada debe tener maximo 20 caracteres. Inténtalo "
-                 "de nuevo."
-              << std::endl;
-    return getInformation(
-        infoType); // Llamada recursiva para obtener una entrada válida si la
-                   // actual no es válida Y devolverla a la funcion que la llamo
-  }
-
-  return value; //
-} // VALIDA LA ENTRADA DEL USUARIO  , TAMBIEN SI RECIBE UN ERROR DE VERIFICACION
   // PIDE EL VALOR DE NUEVO, se verifica los inputs strings
 
-void BloodDatabase::getDonorDetails() {//Funcion dice que va a devolver los datos del donante pero en realidad los guarda
-  clearConsole();
+void BloodDatabase::getDonorDetails() {//Guarda los donantes en el vector
+  console.clearConsole();
   std::cout << "Ingrese los detalles del donante\n" << std::endl;
 
   Donor newDonor;
-  newDonor.donorId = std::stoi(getInformation("donorId"));
-  newDonor.name = getInformation("name");
-  newDonor.address = getInformation("address");
+  newDonor.donorId = std::stoi(console.getInformation("donorId"));
+  newDonor.name = console.getInformation("name");
+  newDonor.address = console.getInformation("address");
   displayProvinces();
-  newDonor.district = std::stoi(getInformation("district"));
-  std::cout << "Tipo de sangre: \n 1. A+\n 2. A-\n 3. B+\n 4. B-\n 5. AB+\n 6. "
-               "AB-\n 7. "
-               "O+\n 8. O- \n ";
-  newDonor.bloodType = std::stoi(getInformation("bloodType"));
-  newDonor.number = getInformation("number");
-  newDonor.date = getInformation("Fecha de donacion");
-  newDonor.donationAmount = std::stoi(getInformation("Cantiddad de donacion"));
+  newDonor.district = std::stoi(console.getInformation("district"));
+  std::cout << "Tipo de sangre: \n 1. A+\n 2. A-\n 3. B+\n 4. B-\n 5. AB+\n 6. ""AB-\n 7. O+\n 8. O- \n ";
+
+  newDonor.bloodType = console.getInformation("bloodType");
+  newDonor.number = console.getInformation("number");
+  newDonor.date = console.getInformation("date");
+  newDonor.donationAmount = std::stoi(console.getInformation("donationAmount"));
 
   donors.push_back(newDonor);
 } // PRIMERO PIDE LOS DATOS DEL DONANTE Y LUEGO LOS USA PARA  GUARDAR EN EL
@@ -156,7 +81,7 @@ void BloodDatabase::writeDataToFile() {
   outfile << newDonor.donorId << ",    " << newDonor.name << ",    "
           << newDonor.address << ",    " << newDonor.district << ",    "
           << newDonor.bloodType << ",    " << newDonor.number << ",    "
-          << newDonor.date << std::endl;
+          << newDonor.date << ",    " << newDonor.donationAmount << std::endl;
 
   outfile.close();
 } // ESCRIBE LOS DATOS DEL DONANTE EN EL ARCHIVO, RESPETA SRP , , Y OPen/Closed
@@ -187,20 +112,20 @@ void  BloodDatabase::loadDonorsFromFile() const {
 } // ABRE EL ARCHIVO PARA LEER , LEE LINEA POR LINEA Y LA PARSEA , SI HAY UN ERROR
   // LO MANEJA
 void BloodDatabase::searchAndDisplay() const {
-  clearConsole();
+  console.clearConsole();
   displayProvinces();
-  int provinceName = std::stoi(getInformation("district"));
+  int provinceName = std::stoi(console.getInformation("district"));
 
   std::cout << "Ingrese la dirección (dejar en blanco para omitir): "
             << std::endl;
   std::string addressFilter;
-  addressFilter = getInformation("address");
+  addressFilter = console.getInformation("address");
 
   std::cout << "Ingrese el tipo de sangre (dejar en blanco para omitir): "
             << std::endl;
 
   std::string bloodTypeFilter;
-  bloodTypeFilter = getInformation("bloodType");
+  bloodTypeFilter = console.getInformation("bloodType");
 
   std::ifstream inFile(fileName);
 
@@ -264,7 +189,7 @@ void BloodDatabase::searchAndDisplay() const {
   }
 
   inFile.close();
-  waitForKeyPress();
+  console.waitForKeyPress();
 } // PIDE LA DIRECCION , PIDE LA SANGRE , ABRE EL ARCHIVO PARA LEER,BUSCA EN  EL
   // ARCHIVO .
 
@@ -383,7 +308,7 @@ BloodDatabase::DonorsData BloodDatabase::readDataFromFileAndSaveStats() { // FUN
 
   if (!inFile) {
     std::cout << "Error al abrir el archivo para leer." << std::endl;
-    waitForKeyPress();
+    console.waitForKeyPress();
     return stats;
   }
   
@@ -417,7 +342,7 @@ BloodDatabase::DonorsData BloodDatabase::readDataFromFileAndSaveStats() { // FUN
   
   if (totalValidDonors == 0) {
     std::cout << "No se encontraron donantes con datos válidos." << std::endl;
-    waitForKeyPress();
+    console.waitForKeyPress();
     return stats;
   }
 
@@ -435,7 +360,7 @@ void BloodDatabase::report(BloodDatabase::DonorsData stats) {
 
   // FUNCION QUE LEE EL ARCHIVO Y GENERA EL REPORTE
   // REPORTE DESDE AQUI
-  clearConsole();
+  console.clearConsole();
   std::cout << "=== REPORTE DE DONANTES POR TIPO DE SANGRE Y ZONA ===" << std::endl;
   std::cout << "======================================================" << std::endl << std::endl;
 
@@ -504,7 +429,7 @@ void BloodDatabase::report(BloodDatabase::DonorsData stats) {
 
   std::cout << "Tipo de sangre más común: " << mostCommonBloodType << " (" << highestCount << " donantes)" << std::endl;
   std::cout << std::endl;
-  waitForKeyPress();
+  console.waitForKeyPress();
 }
 std::vector<Donor> BloodDatabase::getAllDonors() {
     return donors;
