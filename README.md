@@ -50,11 +50,14 @@ El programa consta de 3 clases principales con su respectivas definiciones , un 
 
         const std::string fileName
         static std::vector<Donor> donors
+        std::string bloodTypes
 
     La estrucutra llamada **DonorsData** es la encargada de almacenar  datos de donantes por zona y tipo de sangre Para poder usarlos luego y usar esa informacion estadistica facilmente.
 
     **fileName** es el encargado de guardar el nombre del archivo donde tiene la informacion.
     donors es un vector de donantes que se obtuvieron del archivo de texto, elk cual sirve para trabajar facilmente con los donantes sin necesidad de recurrir ela rchvo continuamente.
+
+    **bloodTypes** Contiene un string con los tipos de sangre.
 
     Esta clase contiene los sigueintes metodos:
 
@@ -99,6 +102,7 @@ El programa consta de 3 clases principales con su respectivas definiciones , un 
         static int getValidatedInput
         static std::string getValidatedStringInput
         static std::string getInformation
+        static void showInfoMessage
     **clearConsole** Limpia la consola 
 
     **waitForKeyPres** Espera la confirmacion del usuario
@@ -108,6 +112,8 @@ El programa consta de 3 clases principales con su respectivas definiciones , un 
     **getValidatedStringInput** Verifica el input como un string y devuelve el input verificado
 
     **getInformation** Devuelve la informacion que se le a pedido al usuario ya verificada 
+
+    **showInfoMessage** Muestra informacion en la consola 
 
 ## Archivo principal
 El archivo principal esta constituido por  las iomportanciones necesecsarias y las inicializaciones necesarias , despues entra a un while que sirve como menu , para pedir la opcion que el usuario desea realizar. Despues entra a un switch que sirve como enrutador hacia las funciones de BloodDatabase

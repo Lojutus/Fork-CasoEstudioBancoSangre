@@ -39,6 +39,7 @@ public:
 private:
   static std::vector<Donor> getAllDonors();
   std::string getZoneName(int zoneCode) const;
+  std::string bloodTypes = " 1. A+\n 2. A-\n 3. B+\n 4. B-\n 5. AB+\n 6. AB-\n 7. O+\n 8. O- \n ";
 
   const std::string fileName = "data.txt";
   static std::vector<Donor> donors;

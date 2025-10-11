@@ -25,7 +25,9 @@ RUN apt-get update \
     libcurl4-openssl-dev \
     nlohmann-json3-dev \
     libgtest-dev \
- && rm -rf /var/lib/apt/lists/*
+    libcurl4-openssl-dev \
+    nlohmann-json3-dev \
+&& rm -rf /var/lib/apt/lists/*
 
 # Compila e instala GoogleTest (libgtest-dev provee código fuente en /usr/src/gtest)
 RUN if [ -d /usr/src/googletest ] ; then \
@@ -49,3 +51,5 @@ EXPOSE 2345
 
 # Mantener el contenedor en ejecución (VS Code lo usará)
 ENTRYPOINT ["tail", "-f", "/dev/null"]
+#manejo de curls
+
