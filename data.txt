@@ -1,2 +1,3 @@
 10,    prueba 2,    DIRECCion,    2,    2,    9000000000,    fecha,    888
 90,    carlos,    cali ve,    2,    4,    66666666666,    ayer fue,    777
+2,    2,    2,    1,    3,    3,    3,    3

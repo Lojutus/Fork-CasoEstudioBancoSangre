@@ -15,6 +15,8 @@ class Console {
 
         static std::string getInformation(const std::string infoRequired);
 
+        static void showInfoMessage(const std::string &message);
+        static void showInfoMessage(const char* message);
 
     private:
     

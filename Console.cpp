@@ -50,6 +50,7 @@ int Console::getValidatedInput(const std::string &value,
 
   return newValue;
 }
+
 std::string Console::getValidatedStringInput(const std::string &value,
                                        const std::string &infoType) {
 
@@ -86,3 +87,10 @@ std::string Console::getInformation(const std::string infoRequired)//verifica si
   return info;
 }
 Console::Console() {}
+
+void Console::showInfoMessage(const std::string &message) {
+  std::cout << "[                   INFO                 ] \n" << message << std::endl;
+}
+void Console::showInfoMessage(const char* message) {
+        std::cout << "[                   INFO                 ] \n" << message << std::endl;
+    }

@@ -20,22 +20,20 @@
 using namespace std;
 
 std::vector<Donor> BloodDatabase::donors;
-Console console;
+
+
 
 
 
 void BloodDatabase::displayProvinces() {
-  std::cout << "Elige el departamento:\n";
-  std::cout << "1. Putumayo\n";
-  std::cout << "2. Cauca\n";
-  std::cout << "3. Valle del Cauca\n";
-  std::cout << "4. Amazonas\n";
-  std::cout << "5. Risaralda\n";
-  std::cout << "6. Antioquia\n";
-  std::cout << "7. Norte de Santander\n";
-  std::cout << "8. Choco\n";
-  std::cout << "9. Arauca\n";
-  std::cout << "10. Guainía\n" << std::endl;
+
+  std::string mensaje =
+    "Elige el departamento:\n" "1. Putumayo\n" "2. Cauca\n" "3. Valle del Cauca\n" "4. Amazonas\n"
+    "5. Risaralda\n" "6. Antioquia\n" "7. Norte de Santander\n" "8. Choco\n"
+    "9. Arauca\n" "10. Guainía\n";
+
+Console::showInfoMessage(mensaje);
+
 } // MUESTRA LOS DEPARTAMENTOS
 
 
@@ -49,21 +47,23 @@ void BloodDatabase::displayProvinces() {
   // PIDE EL VALOR DE NUEVO, se verifica los inputs strings
 
 void BloodDatabase::getDonorDetails() {//Guarda los donantes en el vector
-  console.clearConsole();
-  std::cout << "Ingrese los detalles del donante\n" << std::endl;
+  Console::clearConsole();
+  std::string mensaje = "Ingrese los detalles del donante\n";
+  Console::showInfoMessage(mensaje);
 
   Donor newDonor;
-  newDonor.setDonorId(std::stoi(console.getInformation("donorId")));
-  newDonor.setName(console.getInformation("name"));
-  newDonor.setAddress(console.getInformation("address"));
+  newDonor.setDonorId(std::stoi(Console::getInformation("donorId")));
+  newDonor.setName(Console::getInformation("name"));
+  newDonor.setAddress(Console::getInformation("address"));
   displayProvinces();
-  newDonor.setDistrict(std::stoi(console.getInformation("district")));
-  std::cout << "Tipo de sangre: \n 1. A+\n 2. A-\n 3. B+\n 4. B-\n 5. AB+\n 6. ""AB-\n 7. O+\n 8. O- \n ";
-
-  newDonor.setBloodType( console.getInformation("bloodType"));
-  newDonor.setNumber( console.getInformation("number"));
-  newDonor.setDate(  console.getInformation("date"));
-  newDonor.setDonationAmount( std::stoi(console.getInformation("donationAmount")));
+  newDonor.setDistrict(std::stoi(Console::getInformation("district")));
+  std::string messageBloodTypes = "Tipos de sangre disponibles:\n";
+  messageBloodTypes += bloodTypes;
+  Console::showInfoMessage(messageBloodTypes);
+  newDonor.setBloodType(Console::getInformation("bloodType"));
+  newDonor.setNumber(Console::getInformation("number"));
+  newDonor.setDate(Console::getInformation("date"));
+  newDonor.setDonationAmount(std::stoi(Console::getInformation("donationAmount")));
 
   donors.push_back(newDonor);
 } // PRIMERO PIDE LOS DATOS DEL DONANTE Y LUEGO LOS USA PARA  GUARDAR EN EL VECTOR DE DONANTES,
@@ -72,7 +72,9 @@ void BloodDatabase::writeDataToFile() {
   std::ofstream outfile(fileName, std::ios::app);
 
   if (!outfile) {
-    std::cout << "Error al abrir el archivo para escribir." << std::endl;
+    std::string mensaje = "Error al abrir el archivo para escribir.\n";
+    Console::showInfoMessage(mensaje);
+
     return;
   }
 
@@ -88,7 +90,8 @@ void  BloodDatabase::loadDonorsFromFile() const {
   std::ifstream inFile(fileName);
 
   if (!inFile) {
-    std::cout << "Error al abrir el archivo para leer." << std::endl;
+    Console::showInfoMessage("Error al abrir el archivo para leer.");
+
     return;
   }
 
@@ -105,31 +108,28 @@ void  BloodDatabase::loadDonorsFromFile() const {
       continue; // Omitir líneas con errores y continuar
     }
   }
-  std::cout << "Datos cargados correctamente desde el archivo." << std::endl;
+  Console::showInfoMessage("Datos cargados correctamente desde el archivo.");
 
   inFile.close();
 } // ABRE EL ARCHIVO PARA LEER , LEE LINEA POR LINEA Y LA PARSEA , SI HAY UN ERROR
   // LO MANEJA
 void BloodDatabase::searchAndDisplay() const {
-  console.clearConsole();
+  Console::clearConsole();
   displayProvinces();
-  int provinceName = std::stoi(console.getInformation("district"));
+  int provinceName = std::stoi(Console::getInformation("district"));
 
-  std::cout << "Ingrese la dirección (dejar en blanco para omitir): "
-            << std::endl;
+  Console::showInfoMessage("Ingrese la dirección (dejar en blanco para omitir): ");
   std::string addressFilter;
-  addressFilter = console.getInformation("address");
+  addressFilter = Console::getInformation("address");
 
-  std::cout << "Ingrese el tipo de sangre (dejar en blanco para omitir): "
-            << std::endl;
-
+  Console::showInfoMessage("Ingrese el tipo de sangre (dejar en blanco para omitir): ");
   std::string bloodTypeFilter;
-  bloodTypeFilter = console.getInformation("bloodType");
+  bloodTypeFilter = Console::getInformation("bloodType");
 
   std::ifstream inFile(fileName);
 
   if (!inFile) {
-    std::cout << "Error al abrir el archivo para leer." << std::endl;
+    Console::showInfoMessage("Error al abrir el archivo para leer.");
     return;
   }
 
@@ -157,38 +157,41 @@ void BloodDatabase::searchAndDisplay() const {
     }
   }
 
-  if (!found) {
-    std::cout << "No se encontraron personas de la departamento "
-              << provinceName;
-    if (!addressFilter.empty()) {
-      std::cout << " con dirección que contiene '" << addressFilter << "'";
-    }
-    if (!bloodTypeFilter.empty()) {
-      std::cout << " y tipo de sangre '" << bloodTypeFilter << "'";
-    }
-    std::cout << "." << std::endl;
-  } else {
-    std::cout << "Personas de la departamento " << provinceName;
-    if (!addressFilter.empty()) {
-      std::cout << " con dirección que contiene '" << addressFilter << "'";
-    }
-    if (!bloodTypeFilter.empty()) {
-      std::cout << " y tipo de sangre '" << bloodTypeFilter << "'";
-    }
-    std::cout << ":" << std::endl;
-    for (const auto &d : donors) {
+if (!found) {
+  Console::showInfoMessage(std::string("No se encontraron personas del departamento ") + getZoneName(provinceName));
+  std::string message;
+  if (!addressFilter.empty()) {
+    message += " con dirección que contiene '" + addressFilter + "'";
+  }
+  if (!bloodTypeFilter.empty()) {
+    message += " y tipo de sangre '" + bloodTypeFilter + "'";
+  }
+  Console::showInfoMessage(message);
+} else {
+  std::string message = std::string("Personas del departamento ") + getZoneName(provinceName);
 
-      std::cout << "Nombre: " << d.getName() << std::endl;
-      std::cout << "Dirección: " << d.getAddress() << std::endl;
-      std::cout << "departamento: " << d.getDistrict() << std::endl;
-      std::cout << "Tipo de sangre: " << d.getBloodType()  << std::endl;
-      std::cout << "Número de móvil: " << d.getNumber() << std::endl;
-      std::cout << std::endl;
-    }
+  if (!addressFilter.empty()) {
+    message += " con dirección que contiene '" + addressFilter + "'";
+  }
+  if (!bloodTypeFilter.empty()) {
+    message += " y tipo de sangre '" + bloodTypeFilter + "'";
+  }
+  message += ":\n";
+
+  for (const auto &d : donors) {
+    message += "Nombre: " + d.getName() + "\n";
+    message += "Dirección: " + d.getAddress() + "\n";
+    message += "Departamento: " + getZoneName(d.getDistrict()) + "\n";
+    message += "Tipo de sangre: " + d.getBloodType() + "\n";
+    message += "Número de móvil: " + d.getNumber() + "\n\n";
   }
 
+  Console::showInfoMessage(message);
+
+}
+
   inFile.close();
-  console.waitForKeyPress();
+  Console::waitForKeyPress();
 } // PIDE LA DIRECCION , PIDE LA SANGRE , ABRE EL ARCHIVO PARA LEER,BUSCA EN  EL
   // ARCHIVO .
 
@@ -216,12 +219,17 @@ void BloodDatabase::deleteDonor(const std::string &donorName) {
         Donor d = Donor::parseLine(line);
         if (d.getName() == donorName) {
           found = true;
-          std::cout << "Nombre: " << d.getName() << std::endl;
-          std::cout << "Dirección: " << d.getAddress() << std::endl;
-          std::cout << "Tipo de sangre: " << d.getBloodType()  << std::endl;
-          std::cout << "Número de móvil: " << d.getNumber() << std::endl;
-          std::cout << std::endl;
-          std::cout << "¿Está seguro de que desea eliminar al donante? [s/n]: ";
+
+          std::string message;
+          message += "Nombre: " + d.getName() + "\n";
+          message += "Dirección: " + d.getAddress() + "\n";
+          message += "Tipo de sangre: " + d.getBloodType() + "\n";
+          message += "Número de móvil: " + d.getNumber() + "\n\n";
+          message += "¿Está seguro de que desea eliminar al donante? [s/n]: ";
+
+          Console::showInfoMessage(message);
+
+
           char sureChoice;
           std::cin >> sureChoice;
           std::cin.ignore(std::numeric_limits<std::streamsize>::max(),
@@ -260,8 +268,8 @@ void BloodDatabase::deleteDonor(const std::string &donorName) {
   }
 
   if (!found) {
-    std::cout << "No se encontró ningún donante con el nombre " << donorName
-              << std::endl;
+    Console::showInfoMessage("No se encontró ningún donante con el nombre " + donorName);
+
   }
 } // ABRE EL ARCHIVO ( FUNCION EXTERNA), VERIFICA SI ESTA SEGURO DE ELIMINAR EL
   // DONANTE, SI LO ESTA LO ELIMINA, CIERRA EL ARCHIVO
@@ -318,8 +326,9 @@ BloodDatabase::DonorsData BloodDatabase::readDataFromFileAndSaveStats() { // FUN
   std::ifstream inFile(fileName);
 
   if (!inFile) {
-    std::cout << "Error al abrir el archivo para leer." << std::endl;
-    console.waitForKeyPress();
+    Console::showInfoMessage("Error al abrir el archivo para leer.");
+
+    Console::waitForKeyPress();
     return stats;
   }
   
@@ -352,8 +361,8 @@ BloodDatabase::DonorsData BloodDatabase::readDataFromFileAndSaveStats() { // FUN
   }
   
   if (totalValidDonors == 0) {
-    std::cout << "No se encontraron donantes con datos válidos." << std::endl;
-    console.waitForKeyPress();
+    Console::showInfoMessage("No se encontraron donantes con datos válidos.");
+    Console::waitForKeyPress();
     return stats;
   }
 
@@ -371,13 +380,16 @@ void BloodDatabase::report(BloodDatabase::DonorsData stats) {
 
   // FUNCION QUE LEE EL ARCHIVO Y GENERA EL REPORTE
   // REPORTE DESDE AQUI
-  console.clearConsole();
-  std::cout << "=== REPORTE DE DONANTES POR TIPO DE SANGRE Y ZONA ===" << std::endl;
-  std::cout << "======================================================" << std::endl << std::endl;
-
+  Console::clearConsole();
+  std::string message = "=== REPORTE DE DONANTES POR TIPO DE SANGRE Y ZONA ===\n";
+  message += "======================================================\n";
+  Console::showInfoMessage(message);
 
   // Tipos de sangre a reportar
-  std::vector<std::string> bloodTypes = {"A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"};
+  
+  
+  std::vector<std::string> bloodTypesVector = {"A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"};
+ 
 
   // Reporte por zona
   for (int zone = 1; zone <= 10; zone++) {//zona 1 a 10 definido en codigo duro
@@ -385,7 +397,7 @@ void BloodDatabase::report(BloodDatabase::DonorsData stats) {
       std::cout << "--- " << getZoneName(zone) << " ---" << std::endl;
       std::cout << "Total de donantes en esta zona: " << totalDonorsByZone[zone] << std::endl;
 
-      for (const std::string& bloodType : bloodTypes) {
+      for (const std::string& bloodType : bloodTypesVector) {
         int count = 0;//Contador de donantes por tipo de sangre en la zona actual
         if (donorsByZoneAndType[zone].find(bloodType) != donorsByZoneAndType[zone].end()) {
           count = donorsByZoneAndType[zone][bloodType];
@@ -402,7 +414,8 @@ void BloodDatabase::report(BloodDatabase::DonorsData stats) {
   }
 
   // Resumen nacional por tipo de sangre
-  std::cout << "=== RESUMEN NACIONAL POR TIPO DE SANGRE ===" << std::endl;
+  Console::showInfoMessage("=== RESUMEN NACIONAL POR TIPO DE SANGRE ===");
+
   std::map<std::string, int> nationalCounts;// Mapa para contar donantes por tipo de sangre a nivel nacional
 
   for (const auto& zone : donorsByZoneAndType) { // El auto configura el tipo de dato automáticamente
@@ -415,7 +428,7 @@ void BloodDatabase::report(BloodDatabase::DonorsData stats) {
       totalValidDonors += par.second;
   }
 
-  for (const std::string& bloodType : bloodTypes) {
+  for (const std::string& bloodType : bloodTypesVector) {
     int count = nationalCounts[bloodType];
     double percentage = (totalValidDonors > 0) ? 
                        (static_cast<double>(count) / totalValidDonors) * 100.0 : 0.0;
@@ -427,10 +440,10 @@ void BloodDatabase::report(BloodDatabase::DonorsData stats) {
   std::cout << std::endl;
  
   //Reporte del tipo de sangre mas comun en la poblacion
-  std::cout << "=== TIPO DE SANGRE MÁS COMÚN EN LA POBLACIÓN ===" << std::endl;
+  Console::showInfoMessage("=== TIPO DE SANGRE MÁS COMÚN EN LA POBLACIÓN ===");
   std::string mostCommonBloodType;
   int highestCount = 0;
-  for (const std::string& bloodType : bloodTypes) {
+  for (const std::string& bloodType : bloodTypesVector) {
     int count = nationalCounts[bloodType];
     if (count > highestCount) {
       highestCount = count;
@@ -438,9 +451,8 @@ void BloodDatabase::report(BloodDatabase::DonorsData stats) {
     }
   }
 
-  std::cout << "Tipo de sangre más común: " << mostCommonBloodType << " (" << highestCount << " donantes)" << std::endl;
-  std::cout << std::endl;
-  console.waitForKeyPress();
+  Console::showInfoMessage("Tipo de sangre más común: " + mostCommonBloodType + " (" + std::to_string(highestCount) + " donantes)");
+  Console::waitForKeyPress();
 }
 std::vector<Donor> BloodDatabase::getAllDonors() {
     return donors;
