@@ -16,7 +16,7 @@ int main() {
   std::string valor;
 
   while (true) {
-    Console::clearConsole();
+    
 
     std::cout << " ░█████╗░██████╗░██╗░░░██╗███████╗  ██████╗░░█████╗░░░░░░██╗░"
                  "█████╗░\n"
@@ -44,14 +44,17 @@ int main() {
 
     switch (choice) {
     case 1:
+      Console::clearConsole();
       database.getDonorDetails();
       database.writeDataToFile();
       std::cout << "Donante registrado exitosamente.\n";
       break;
     case 2:
+      Console::clearConsole();
       database.searchAndDisplay();
       break;
     case 3:
+      Console::clearConsole();
       std::cout << "Ingrese el nombre del donante a eliminar: ";
       std::getline(std::cin, donorName);
       database.deleteDonor(donorName);
@@ -59,16 +62,19 @@ int main() {
       break;
 
     case 4:
+    Console::clearConsole();
       std::cout << "Gracias por usar el Sistema de la Cruz Roja" << std::endl;
       return 0;
 
     case 5:
+      Console::clearConsole();
       std::cout << "Reporte de donaciones" << std::endl;
       
       database.report(stats);
       break;
 
     default:
+      Console::clearConsole();
       std::cout << "Opción no válida. Inténtalo de nuevo.\n";
       Console::waitForKeyPress();
       break;
