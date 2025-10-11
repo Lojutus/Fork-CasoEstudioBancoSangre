@@ -17,11 +17,10 @@ public:
     std::map<int, std::map<std::string, int>> donorsByZoneAndType;
     std::map<int, int> totalDonorsByZone;
   };
-  static std::vector<Donor> getAllDonors();
+  
   
 
-  std::string getZoneName(int zoneCode) const;
-
+ 
   DonorsData readDataFromFileAndSaveStats();
 
   void report(DonorsData stats);
@@ -38,6 +37,9 @@ public:
   
 
 private:
+  static std::vector<Donor> getAllDonors();
+  std::string getZoneName(int zoneCode) const;
+
   const std::string fileName = "data.txt";
   static std::vector<Donor> donors;
   std::string normalizeBloodType(const std::string& bloodType) const;

@@ -11,11 +11,14 @@ El programa consta de 3 clases principales con su respectivas definiciones , un 
 1. **Donor**: La cual es la encargada de representar los donantes, Esta clase posee los sigientes atributos:
 
     Publicos:
+    
+        getters y setters de: int donorId, district, donationAmount;
+        std::string name, address, number, bloodType, date;
 
+        
+    Privados:
         int donorId, district, donationAmount;
         std::string name, address, number, bloodType, date;
-    Privados:
-
         std::vector<std::string> infoElementsDonorInt
         std::vector<std::string> infoElementsDonorString
     Todos los atributos publicos son los que estan encargados de representar diversa informacion que los donantes poseen,
@@ -57,8 +60,8 @@ El programa consta de 3 clases principales con su respectivas definiciones , un 
 
     ## Publicos:
 
-        `static std::vector<Donor> getAllDonors`
-        std::string getZoneName
+        
+        
         DonorsData readDataFromFileAndSaveStats
         void report
         void getDonorDetails
@@ -70,6 +73,8 @@ El programa consta de 3 clases principales con su respectivas definiciones , un 
 
         static void displayProvinces
         std::string normalizeBloodType
+        static std::vector<Donor> getAllDonors
+        std::string getZoneName
     **getAllDonors** Devuelve todos los donantes en forma de vector.
 
     **getZoneName** Apartir del codigo del municipio devuelve el nombre de este mismo.
