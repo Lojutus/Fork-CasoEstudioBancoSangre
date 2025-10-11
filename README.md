@@ -10,18 +10,19 @@ Se implemento de un proyecto anonimo  un sistema para poder compilar y hacer deb
 El programa consta de 3 clases principales con su respectivas definiciones , un sript main Y un archivo txt encargado de guardar los datos  , las clases son las siguientes:
 1. **Donor**: La cual es la encargada de representar los donantes, Esta clase posee los sigientes atributos:
 
-    Publicos:
+    ## Publicos:
     
         getters y setters de: int donorId, district, donationAmount;
         std::string name, address, number, bloodType, date;
 
         
-    Privados:
+    ## Privados:
+
         int donorId, district, donationAmount;
         std::string name, address, number, bloodType, date;
         std::vector<std::string> infoElementsDonorInt
-        std::vector<std::string> infoElementsDonorString
-    Todos los atributos publicos son los que estan encargados de representar diversa informacion que los donantes poseen,
+        std::vector<std::string> infoElementsDonorStringTodos los atributos publicos son los que estan encargados de representar diversa informacion que los donantes poseen,
+        
     Mientras tanto los atributos privados los cuales son vectores, se encargan de definir el tipo de dato con el que se debe de verificar
     esto se deberia de cambiar en algun futuro.
 
