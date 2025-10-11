@@ -114,6 +114,12 @@ El programa consta de 3 clases principales con su respectivas definiciones , un 
     **getInformation** Devuelve la informacion que se le a pedido al usuario ya verificada 
 
     **showInfoMessage** Muestra informacion en la consola 
+4. **ValidateInfo** Esta clase es la encargada de las verificaciones con API tiene datos sencibles que se deberian de configurar manualmente, tiene estos metodos:
+    ## Publicos
+
+        static bool validateNumberPhone
+
+    **validateNumberPhone** Utiliza la API de abstract Para verificar los numeros, Con curls
 
 ## Archivo principal
 El archivo principal esta constituido por  las iomportanciones necesecsarias y las inicializaciones necesarias , despues entra a un while que sirve como menu , para pedir la opcion que el usuario desea realizar. Despues entra a un switch que sirve como enrutador hacia las funciones de BloodDatabase
