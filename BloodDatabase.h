@@ -13,7 +13,7 @@
 class BloodDatabase {
   
 public:
-  struct DonorsData { // Estructura para almacenar datos de donantes por zona y tipo de sangre Para poder usarlos luego y añadir informacion estadistica facilemente
+  struct DonorsData { // Estructura para almacenar datos de donantes por zona y tipo de sangre Para poder usarlos luego y añadir informacion estadistica facilmente
     std::map<int, std::map<std::string, int>> donorsByZoneAndType;
     std::map<int, int> totalDonorsByZone;
   };

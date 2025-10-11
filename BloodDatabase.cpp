@@ -66,8 +66,7 @@ void BloodDatabase::getDonorDetails() {//Guarda los donantes en el vector
   newDonor.donationAmount = std::stoi(console.getInformation("donationAmount"));
 
   donors.push_back(newDonor);
-} // PRIMERO PIDE LOS DATOS DEL DONANTE Y LUEGO LOS USA PARA  GUARDAR EN EL
-  // VECTOR DE DONANTES,
+} // PRIMERO PIDE LOS DATOS DEL DONANTE Y LUEGO LOS USA PARA  GUARDAR EN EL VECTOR DE DONANTES,
 
 void BloodDatabase::writeDataToFile() {
   std::ofstream outfile(fileName, std::ios::app);
